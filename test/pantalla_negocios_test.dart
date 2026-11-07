@@ -1,3 +1,11 @@
+// ============================================================
+// PASO 6.1 - Pruebas de widgets de la pantalla
+// ESTADO: ROJO
+// ============================================================
+// En rojo deben FALLAR: la pantalla no refleja el estado del
+// ViewModel (siempre muestra la rueda de carga), no muestra el
+// estado vacio, no ofrece Reintentar y no deja tocar la estrella.
+
 import 'dart:convert';
 
 import 'package:directorio_dolorense/datos/negocios_api.dart';
@@ -37,7 +45,7 @@ void main() {
     expect(find.byIcon(Icons.star), findsOneWidget);
   });
 
-  testWidgets('muestra el estado vacío', (tester) async {
+  testWidgets('muestra el estado vacio', (tester) async {
     final cliente = MockClient((_) async => http.Response('[]', 200));
 
     await tester.pumpWidget(pantallaCon(cliente));

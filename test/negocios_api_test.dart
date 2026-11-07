@@ -1,3 +1,10 @@
+// ============================================================
+// PASO 3.3 - Crear, buscar y eliminar
+// (pruebas del cliente HTTP: 3.1 + 3.2 + 3.3)
+// ============================================================
+// En rojo: estas pruebas deben FALLAR mientras NegociosApi no
+// mande ?q= y no implemente crear / actualizar / eliminar.
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -11,6 +18,9 @@ import 'package:http/testing.dart';
 NegociosApi apiCon(MockClient c) => NegociosApi(c, 'http://prueba');
 
 void main() {
+  // ------------------------------------------------------------
+  // 3.1 - Listar
+  // ------------------------------------------------------------
   test('listar convierte el JSON en objetos Negocio', () async {
     final api = apiCon(MockClient((req) async {
       expect(req.method, 'GET');
@@ -24,10 +34,14 @@ void main() {
     }));
     final lista = await api.listar();
     expect(lista.length, 2);
+    expect(lista.first, isA<Negocio>());
     expect(lista.first.nombre, 'A');
   });
 
-  test('status 500 lanza ErrorServidorException con el código', () async {
+  // ------------------------------------------------------------
+  // 3.2 - Los casos de falla
+  // ------------------------------------------------------------
+  test('status 500 lanza ErrorServidorException con el codigo', () async {
     final api = apiCon(MockClient((_) async => http.Response('boom', 500)));
     expect(
         api.listar(),
@@ -41,7 +55,7 @@ void main() {
     expect(api.listar(), throwsA(isA<SinConexionException>()));
   });
 
-  test('timeout se trata como sin conexión', () {
+  test('timeout se trata como sin conexion', () {
     final api = NegociosApi(
       MockClient((_) async {
         await Future.delayed(const Duration(milliseconds: 200));
@@ -58,15 +72,18 @@ void main() {
     expect(api.listar(), throwsA(isA<RespuestaInvalidaException>()));
   });
 
-  test('listar con búsqueda manda el parámetro q codificado', () async {
+  // ------------------------------------------------------------
+  // 3.3 - Crear, buscar y eliminar
+  // ------------------------------------------------------------
+  test('listar con busqueda manda el parametro q codificado', () async {
     final api = apiCon(MockClient((req) async {
-      expect(req.url.queryParameters['q'], 'nieve limón');
+      expect(req.url.queryParameters['q'], 'nieve limon');
       return http.Response('[]', 200);
     }));
-    await api.listar(busqueda: 'nieve limón');
+    await api.listar(busqueda: 'nieve limon');
   });
 
-  test('crear envía JSON con Content-Type correcto', () async {
+  test('crear envia JSON con Content-Type correcto', () async {
     final api = apiCon(MockClient((req) async {
       expect(req.method, 'POST');
       expect(req.headers['Content-Type'], contains('application/json'));
@@ -88,6 +105,7 @@ void main() {
     await api.eliminar(4);
   });
 
+  // RETO DEL MANUAL: actualizar usa PUT y manda el favorito.
   test('actualizar usa PUT al id y manda el favorito', () async {
     final api = apiCon(MockClient((req) async {
       expect(req.method, 'PUT');

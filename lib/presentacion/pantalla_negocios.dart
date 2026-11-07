@@ -1,3 +1,21 @@
+// ============================================================
+// PASO 6.1 - Pantalla de negocios
+// ESTADO: VERDE
+// ============================================================
+// La pantalla solo dibuja segun el estado del ViewModel. El
+// switch de Dart obliga a cubrir los cinco casos: si falta uno,
+// el compilador lo reclama.
+//
+//   inicial / cargando -> rueda de carga
+//   error              -> nube tachada, mensaje y Reintentar
+//   vacio              -> "Aun no hay negocios..."
+//   listo              -> ListView con estrellas y deslizar
+//
+// Detalles de una pantalla de red bien hecha:
+//   · RefreshIndicator: jalar hacia abajo para recargar.
+//   · Dismissible: deslizar un renglon lo elimina (DELETE).
+//   · Reintentar en el error: el usuario se recupera sin cerrar.
+
 import 'package:flutter/material.dart';
 
 import '../dominio/negocio.dart';
@@ -32,7 +50,7 @@ class _PantallaNegociosState extends State<PantallaNegocios> {
           ),
           TextField(
             controller: categoria,
-            decoration: const InputDecoration(labelText: 'Categoría'),
+            decoration: const InputDecoration(labelText: 'Categoria'),
           ),
         ]),
         actions: [
@@ -56,7 +74,7 @@ class _PantallaNegociosState extends State<PantallaNegocios> {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('El nombre y la categoría son obligatorios.'),
+            content: Text('El nombre y la categoria son obligatorios.'),
           ),
         );
         return;

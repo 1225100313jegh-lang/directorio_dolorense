@@ -1,3 +1,15 @@
+// ============================================================
+// PASO 5.1 - ViewModel y los cinco estados
+// ESTADO: ROJO
+// ============================================================
+// En rojo estas pruebas deben FALLAR: el ViewModel todavia no
+// recorre inicial -> cargando -> listo / vacio / error ni
+// permite reintentar.
+//
+// La primera prueba registra los estados anunciados y exige que
+// sean EXACTAMENTE [cargando, listo]: se prueba el viaje, no
+// solo el destino.
+
 import 'dart:convert';
 
 import 'package:directorio_dolorense/datos/negocios_api.dart';
@@ -24,7 +36,7 @@ void main() {
     expect(vm.negocios.length, 1);
   });
 
-  test('cargar con lista vacía termina en vacio', () async {
+  test('cargar con lista vacia termina en vacio', () async {
     final vm = vmCon((_) async => http.Response('[]', 200));
     await vm.cargar();
     expect(vm.estado, Estado.vacio);
@@ -70,6 +82,8 @@ void main() {
     expect(vm.negocios.first.favorito, true);
   });
 
+  // RETO DEL MANUAL: si agregar() falla con 400, estado error y
+  // el mensaje debe contener el codigo.
   test('agregar con error 400 termina en error con mensaje', () async {
     final vm = vmCon((req) async => req.method == 'POST'
         ? http.Response('', 400)
